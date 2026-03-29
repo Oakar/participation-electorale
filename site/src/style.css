@@ -3,3 +3,17 @@
 html, body, #app {
   height: 100%;
 }
+
+.participation-label {
+  background: none !important;
+  border: none !important;
+  text-align: center;
+}
+
+.participation-label span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
+  white-space: nowrap;
+}

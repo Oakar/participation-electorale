@@ -14,6 +14,7 @@ import type { ParticipationRecord } from "../types";
 const mapContainer = ref<HTMLElement | null>(null);
 const map = shallowRef<L.Map | null>(null);
 const geoLayer = shallowRef<L.GeoJSON | null>(null);
+const labelLayer = shallowRef<L.LayerGroup | null>(null);
 const layerIndex = new Map<string, L.Layer>();
 const mapError = ref<string | null>(null);
 let renderGeneration = 0;
@@ -71,6 +72,10 @@ async function renderLayer() {
   if (geoLayer.value) {
     map.value.removeLayer(geoLayer.value);
     geoLayer.value = null;
+  }
+  if (labelLayer.value) {
+    map.value.removeLayer(labelLayer.value);
+    labelLayer.value = null;
   }
   layerIndex.clear();
   previousHighlight = null;
@@ -137,7 +142,11 @@ async function renderLayer() {
         const record = index.get(code);
 
         layerIndex.set(code, layer);
-        layer.bindTooltip(tooltipContent(name, record));
+
+        // Tooltip uniquement pour les communes
+        if (level === "communes") {
+          layer.bindTooltip(tooltipContent(name, record));
+        }
 
         layer.on("mouseover", () => hoverFeature(code));
         layer.on("mouseout", () => hoverFeature(null));
@@ -153,6 +162,30 @@ async function renderLayer() {
         });
       },
     }).addTo(map.value);
+
+    // Labels fixes avec le taux pour régions et départements
+    if (level !== "communes") {
+      const markers: L.Marker[] = [];
+      geoLayer.value.eachLayer((layer) => {
+        const feature = (layer as L.GeoJSON).feature as GeoJSON.Feature;
+        const code = feature.properties?.code;
+        const record = index.get(code);
+        if (!record || record.inscrits === 0) return;
+
+        const pct = ((record.exprimes / record.inscrits) * 100).toFixed(1);
+        const bounds = (layer as L.Polygon).getBounds();
+        const center = bounds.getCenter();
+
+        const icon = L.divIcon({
+          className: "participation-label",
+          html: `<span>${pct}%</span>`,
+          iconSize: [50, 20],
+          iconAnchor: [25, 10],
+        });
+        markers.push(L.marker(center, { icon, interactive: false }));
+      });
+      labelLayer.value = L.layerGroup(markers).addTo(map.value);
+    }
 
     if (level === "regions" && territory) {
       map.value.fitBounds(territory.bounds, { padding: [20, 20] });
@@ -202,6 +235,7 @@ onUnmounted(() => {
     map.value = null;
   }
   geoLayer.value = null;
+  labelLayer.value = null;
   layerIndex.clear();
 });
 
