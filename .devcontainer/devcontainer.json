@@ -1,15 +1,24 @@
 {
-  "name": "Elections - Python & TypeScript",
+  "name": "PRISME - Python, Java & TypeScript",
   "build": {
     "dockerfile": "Dockerfile"
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21",
+      "installMaven": "true"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
+        "SonarSource.sonarlint-vscode",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "Vue.volar",
@@ -21,10 +30,13 @@
       }
     }
   },
+  "runArgs": [
+    "--network=prisme-network"
+  ],
   "forwardPorts": [
     3000,
-    8000,
+    8080,
     5173
   ],
-  "postCreateCommand": "pip install -r requirements.txt && cd site && npm install"
+  "postCreateCommand": "pip install -r batch/requirements.txt && cd client && npm install && cd ../server && mvn dependency:resolve -q"
 }

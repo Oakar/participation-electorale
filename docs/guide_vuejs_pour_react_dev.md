@@ -80,7 +80,7 @@ C'est pour ca qu'on n'a pas besoin de `useCallback` ou `useMemo` pour eviter les
 
 ### Dans notre code
 
-`site/src/composables/useAppState.ts` :
+`client/src/composables/useAppState.ts` :
 ```ts
 const elections = ref<Election[]>([]);
 const highlightedCommune = ref<string | null>(null);
@@ -105,7 +105,7 @@ const fullName = computed(() => `${first.value} ${last.value}`);
 
 ### Dans notre code
 
-`site/src/composables/useAppState.ts` :
+`client/src/composables/useAppState.ts` :
 ```ts
 const viewLevel = computed<ViewLevel>(() => {
   if (route.params.dept) return "communes";
@@ -149,7 +149,7 @@ watch(
 
 ### Dans notre code
 
-`site/src/composables/useElectionData.ts` :
+`client/src/composables/useElectionData.ts` :
 ```ts
 watch(
   () => [route.params.territory, route.params.region, route.params.dept, route.query.election],
@@ -211,7 +211,7 @@ Equivalent React : un Context + Provider qui wrappe l'app.
 ### Structure des routes
 
 ```ts
-// site/src/router.ts
+// client/src/router.ts
 const routes = [
   { path: "/", name: "home", component: TerritorySelector },
   { path: "/:territory", name: "regions", component: MapView },

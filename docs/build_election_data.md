@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Le script `scripts/build_election_data.py` transforme le fichier CSV brut des resultats electoraux (`data/csv/general_results.csv`, 387 Mo, ~3.16M lignes a granularite **bureau de vote**) en une arborescence de petits fichiers JSON pre-decoupes par niveau geographique et par election.
+Le script `batch/build_election_data.py` transforme le fichier CSV brut des resultats electoraux (`data/csv/general_results.csv`, 387 Mo, ~3.16M lignes a granularite **bureau de vote**) en une arborescence de petits fichiers JSON pre-decoupes par niveau geographique et par election.
 
 Le script lit le CSV **par chunks** (50 000 lignes) pour limiter la consommation memoire, agrege incrementalement les bureaux de vote en communes, puis derive les niveaux departement et region. Les informations de region (absentes du CSV) sont injectees via le fichier de reference `data/csv/ref_departements_regions.csv`.
 
@@ -18,7 +18,7 @@ Le design complet de l'arborescence cible est decrit dans [`docs/architecture_ca
 ## Usage
 
 ```bash
-python scripts/build_election_data.py
+python batch/build_election_data.py
 ```
 
 Aucun argument requis. Les chemins sont configurables via `PipelineConfig`.

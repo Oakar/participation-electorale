@@ -1,0 +1,27 @@
+services:
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: prisme-postgis
+    environment:
+      POSTGRES_DB: prisme
+      POSTGRES_USER: prisme
+      POSTGRES_PASSWORD: prisme
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prisme -d prisme"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - prisme-network
+
+volumes:
+  pgdata:
+
+networks:
+  prisme-network:
+    name: prisme-network
+    driver: bridge

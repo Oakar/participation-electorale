@@ -1,4 +1,4 @@
-# Architecture données — Carte électorale France
+# Architecture données — PRISME
 
 ## Objectif
 
@@ -239,7 +239,7 @@ Le calcul est trivial et ne justifie pas de le pré-calculer dans les fichiers.
 
 ## Script à développer
 
-Un script `scripts/build_election_data.py` qui :
+Un script `batch/build_election_data.py` qui :
 
 1. Lit `data/csv/aggregated_results.csv`
 2. Décompose `id_election` en `type`, `tour`, `annee`

@@ -1,8 +1,8 @@
-# Participation Electorale - Presentation du projet
+# PRISME - Presentation du projet
 
-Carte interactive de la participation electorale en France, couvrant **56 elections de 1999 a 2026** (presidentielles, legislatives, europeennes, municipales, regionales, departementales, cantonales).
+**PRISME** — Portail Regional d'Indicateurs Statistiques et de Mesures.
 
-L'utilisateur navigue par zoom geographique (territoire, region, departement, commune) et filtre par type d'election et tour. Un code couleur indique le taux de participation : rouge (< 50 %), blanc (50-75 %), bleu (> 75 %).
+Plateforme de visualisation de donnees territoriales en France. L'utilisateur explore son territoire a travers differents indicateurs (elections, demographie, securite, economie, culture) sur une carte interactive a 3 niveaux de zoom (territoire, region, departement, commune).
 
 ---
 
@@ -48,7 +48,7 @@ Le projet transforme un fichier CSV brut de 387 Mo (3,16 millions de lignes, gra
                          │
                          ▼
 ┌───────────────────────────────────────────────────────────────────┐
-│              Pipeline Python (scripts/)                            │
+│              Pipeline Python (batch/)                            │
 │  build_election_data.py                                           │
 │  Lecture par chunks → Enrichissement → Agregation → JSON          │
 └────────────────────────┬──────────────────────────────────────────┘
@@ -61,10 +61,10 @@ Le projet transforme un fichier CSV brut de 387 Mo (3,16 millions de lignes, gra
 │  departements/{code_region}/{id_election}.json                    │
 │  communes/{code_departement}/{id_election}.json                   │
 └────────────────────────┬──────────────────────────────────────────┘
-                         │  copie/symlink dans site/public/data/
+                         │  copie/symlink dans client/public/data/
                          ▼
 ┌───────────────────────────────────────────────────────────────────┐
-│              Frontend Vue 3 (site/)                                │
+│              Frontend Vue 3 (client/)                                │
 │  Carte Leaflet + GeoJSON + selection d'elections                  │
 │  Navigation hierarchique avec breadcrumbs                         │
 │  Chargement a la demande des JSON                                 │
@@ -75,7 +75,7 @@ Le projet transforme un fichier CSV brut de 387 Mo (3,16 millions de lignes, gra
 
 ## Brique 1 — Pipeline de donnees (Python)
 
-**Fichier :** `scripts/build_election_data.py` (362 lignes)
+**Fichier :** `batch/build_election_data.py` (362 lignes)
 **Dependances :** Python 3.10+, pandas
 
 ### Objectif
@@ -152,7 +152,7 @@ Le CSV de 387 Mo n'est jamais charge en entier. La lecture par chunks de 50 000 
 
 ## Brique 2 — Frontend interactif (Vue 3 + Leaflet)
 
-**Dossier :** `site/`
+**Dossier :** `client/`
 **Stack :** Vue 3 (Composition API, TypeScript), Leaflet 1.9, Tailwind CSS 4, Vite 8
 
 ### Architecture des composants
@@ -241,7 +241,7 @@ Chaque territoire definit ses bornes geographiques (bounds) pour le cadrage init
 
 ## Brique 3 — Donnees geographiques (GeoJSON)
 
-**Dossier :** `site/public/geo/`
+**Dossier :** `client/public/geo/`
 
 Les contours geographiques sont stockes au format GeoJSON et charges par le composant `ElectionMap` :
 
@@ -272,17 +272,17 @@ Le projet inclut une configuration **Dev Container** (`.devcontainer/`) :
 Le fichier `.github/workflows/deploy.yml` deploie automatiquement le site sur **GitHub Pages** :
 1. Declenchement : push sur `main` ou dispatch manuel
 2. Build : `npm run build` (verification TypeScript + build Vite)
-3. Deploiement : publication du dossier `site/dist/` sur GitHub Pages
+3. Deploiement : publication du dossier `client/dist/` sur GitHub Pages
 
 ### Commandes
 
 | Commande | Description |
 |----------|-------------|
-| `pip install -r requirements.txt` | Installation des dependances Python |
+| `pip install -r batch/requirements.txt` | Installation des dependances Python |
 | `cd site && npm install` | Installation des dependances frontend |
-| `python scripts/build_election_data.py` | Generation des fichiers JSON (~6 000 fichiers) |
+| `python batch/build_election_data.py` | Generation des fichiers JSON (~6 000 fichiers) |
 | `cd site && npm run dev` | Serveur de developpement (port 3000) |
-| `cd site && npm run build` | Build de production dans `site/dist/` |
+| `cd site && npm run build` | Build de production dans `client/dist/` |
 | `cd site && npm run preview` | Apercu du build de production |
 
 ---
