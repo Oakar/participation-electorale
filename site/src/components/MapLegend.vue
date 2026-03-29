@@ -3,7 +3,7 @@
     <div class="mb-1.5 font-semibold text-gray-700">Participation (exprimés/inscrits)</div>
     <div
       class="h-3 w-48 rounded-sm"
-      style="background: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 255, 255) 50%, rgb(128, 128, 255) 75%, rgb(0, 0, 255))"
+      style="background: linear-gradient(to right, rgb(180, 0, 0), rgb(255, 255, 255) 50%, rgb(128, 128, 213) 75%, rgb(0, 0, 170))"
     ></div>
     <div class="mt-0.5 flex justify-between text-gray-500">
       <span>0%</span>
